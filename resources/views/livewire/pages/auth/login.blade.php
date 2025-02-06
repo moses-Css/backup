@@ -4,6 +4,7 @@ use App\Livewire\Forms\LoginForm;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
+use Illuminate\Support\Facades\Auth;
 
 new #[Layout('layouts.guest')] class extends Component
 {
@@ -20,9 +21,15 @@ new #[Layout('layouts.guest')] class extends Component
 
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
-    }
-}; ?>
+        $this->redirectIntended(
+            default: Auth::check() && Auth::user()->hasRole(['admin', 'pegawai']) 
+                ? route('dashboard') 
+                : route('welcome'), 
+            navigate: true
+        );
+}
+}
+?>
 
 <div>
     <!-- Session Status -->

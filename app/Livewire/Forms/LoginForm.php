@@ -30,11 +30,21 @@ class LoginForm extends Form
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only(['email', 'password']), $this->remember)) {
+        if (!Auth::attempt($this->only(['email', 'password']), $this->remember)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
                 'form.email' => trans('auth.failed'),
+            ]);
+        }
+
+        // Setelah login, ambil user dari Auth
+        $user = Auth::user();
+
+        // Pastikan user ada sebelum memeriksa role
+        if (!$user) {
+            throw ValidationException::withMessages([
+                'form.email' => 'Terjadi kesalahan saat login. Silakan coba lagi.',
             ]);
         }
 
@@ -67,6 +77,6 @@ class LoginForm extends Form
      */
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+        return Str::transliterate(Str::lower($this->email) . '|' . request()->ip());
     }
 }
