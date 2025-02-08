@@ -32,7 +32,7 @@ new class extends Component
                 <!-- Navigation Links -->
                 <div class=" text-neutraldark dark:text-secondary hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
 
-                    <button @click="darkMode = !darkMode"
+                    <!-- <button @click="darkMode = !darkMode"
                         class="mb-4 p-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start">
                         <template x-if="darkMode">
                             <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2"
@@ -50,7 +50,7 @@ new class extends Component
                             </svg>
                         </template>
                         <span x-text="darkMode ? 'Dark Mode' : 'Light Mode'" class="ml-2"></span>
-                    </button>
+                    </button> -->
                     
                     @if(auth()->check())
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
@@ -122,34 +122,9 @@ new class extends Component
         <!-- Header dengan hamburger -->
         <div class="flex items-center sm:hidden w-full flex-row justify-between bg-secondary dark:bg-neutralDark">
 
-            <button @click="darkMode = !darkMode"
-                class="mb-4 p-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start">
-                <template x-if="darkMode">
-                    <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 3v1m0 16v1m8.485-8.485h-1m-14.97 0h-1m11.314-6.364l-.707.707m-8.486 8.486l-.707.707m0-11.314l.707.707m8.486 8.486l.707.707M12 6.25a5.75 5.75 0 100 11.5 5.75 5.75 0 000-11.5z">
-                        </path>
-                    </svg>
-                </template>
-                <template x-if="!darkMode">
-                    <svg class="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 2a9.003 9.003 0 000 18c4.97 0 9-4.03 9-9S16.97 2 12 2z"></path>
-                    </svg>
-                </template>
-                <span x-text="darkMode ? 'Dark Mode' : 'Light Mode'" class="ml-2"></span>
-            </button>
-
             <a class="text-neutraldark dark:text-secondary" href="/">BKKBN<span class="font-bold text-sm">.Galeri</span></a>
             <button @click="open = !open" class="inline-flex items-center justify-center p-2 rounded-md text-neutraldark dark:text-secondary hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none transition duration-150 ease-in-out">
-                <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                    <path :class="{'hidden': open, 'inline-flex': !open}" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 6h16M4 12h16M4 18h16" />
-                    <path :class="{'hidden': !open, 'inline-flex': open}" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <x-icon name="burger"/>
             </button>
         </div>
 
@@ -181,7 +156,7 @@ new class extends Component
                     </x-responsive-nav-link>
                     @endif
 
-                    <x-responsive-nav-link :href="route('profile')" wire:navigate>
+                    <x-responsive-nav-link :href="route('welcome')" wire:navigate>
                         {{__('Beranda')}}
                     </x-responsive-nav-link>
 

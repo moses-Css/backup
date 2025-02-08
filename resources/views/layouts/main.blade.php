@@ -16,7 +16,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -45,9 +44,8 @@ BODYBODYBODYBODYBODYBODYBODYBODYBODYBODYBODYBODY -->
         @yield('content')
     </div>
 </body>
-<footer class="bg-gray-900 text-white text-center py-12">
-        <p>&copy; 2025 YourCompany. All rights reserved.</p>
-    </footer>
+
+<x-footers/>
 
 
 </html>

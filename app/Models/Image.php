@@ -10,7 +10,7 @@ class Image extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['photo_id', 'path', 'latitude', 'longtitude', 'waktu'] ;
+    protected $fillable = ['photo_id', 'path', 'latitude', 'longitude', 'waktu']; // Perbaiki typo longtitude → longitude
 
     public function photo(): BelongsTo
     {

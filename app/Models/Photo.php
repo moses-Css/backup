@@ -12,11 +12,18 @@ class Photo extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['kategori_id', 'title', 'deskripsi', 'tanggal', 'lokasi'];
+    protected $table = 'photos';
+
+    protected $fillable = ['group_id'];
 
     public function kategori(): BelongsTo
     {
-        return $this->belongsTo(Kategori::class);
+        return $this->belongsTo(Kategori::class, 'kategori_id');
+    }
+
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(Group::class, 'group_id');
     }
 
     public function images(): HasMany

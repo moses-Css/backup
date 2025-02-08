@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Photo;
 use App\Models\Kategori;
 use App\Models\Image;
+use App\Models\Group;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Intervention\Image\Facades\Image as ImageIntervention;
@@ -37,33 +38,55 @@ class PhotoController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        $request->validate([
-            'kategori_id' => 'required|exists:kategoris,id',
-            'title' => 'required|max:255',
-            'deskripsi' => 'required',
-            'tanggal' => 'required|date',
-            'lokasi' => 'required',
-            'images' => 'required|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+{
+    $request->validate([
+        'kategori_id' => 'required|exists:kategoris,id',
+        'title' => 'required|max:255', // Judul grup
+        'deskripsi' => 'nullable|string',
+        'tanggal' => 'nullable|date',
+        'lokasi' => 'nullable|string',
+        'latitude' => 'nullable|numeric',
+        'longitude' => 'nullable|numeric',
+        'images'   => 'required|array',
+        'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:20480',
+    ], [
+        'images.*.max' => 'Ukuran file :attribute tidak boleh lebih dari 20MB.',
+    ], [
+        'images.*' => 'gambar',
+    ]);
+
+
+    // **1. Buat grup baru otomatis**
+    $group = Group::create([
+        'kategori_id' => $request->kategori_id,
+        'title' => $request->title, // Nama grup dari input
+        'deskripsi' => $request->deskripsi,
+    ]);
+    // **2. Buat satu entri di tabel `photos` untuk grup tersebut**
+    $photo = $group->photos()->create([
+        'kategori_id' => $request->kategori_id,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    // **3. Simpan semua gambar dalam tabel `images`**
+    foreach ($request->file('images') as $file) {
+        $folderPath = "photos/{$group->id}"; // Simpan berdasarkan grup
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $path = $file->storeAs($folderPath, $filename, 'public');
+
+        // Simpan informasi gambar
+        $photo->images()->create([
+            'path' => $path,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'waktu' => $request->tanggal ? now() : null,
         ]);
-
-        // Menyimpan data foto
-        $photo = Photo::create($request->except('images'));
-
-        // Menyimpan gambar
-        foreach ($request->file('images') as $file) {
-            // Simpan file di folder 'photos' dalam 'storage/app/public'
-            $path = $file->store('photos', 'public');  // Gunakan disk 'public'
-
-            // Simpan path gambar ke database
-            $photo->images()->create([
-                'path' => $path, // Simpan path langsung tanpa mengubah 'public/'
-            ]);
-        }
-
-        return redirect()->route('photos.index');
     }
+
+    return redirect()->route('photos.index')->with('success', 'Photo berhasil disimpan dalam grup baru.');
+}
+
 
     // Tambahkan method edit, update, show, destroy
 

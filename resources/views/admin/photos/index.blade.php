@@ -3,7 +3,7 @@
 @section('content')
 <div class="container mx-auto p-4">
     <h1 class="text-2xl font-semibold mb-4">Photos</h1>
-
+    <a href="{{route ('photos.create')}}">Create</a>
     <!-- Button untuk memilih semua foto -->
     <div class="mb-4">
         <button id="select-all" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">Select All</button>
@@ -12,6 +12,8 @@
             <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600" disabled id="bulk-delete-btn">Delete Selected</button>
         </form>
     </div>
+    @livewire('kategori-tab')
+    @livewire('galeri-grid')
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach ($photos as $photo)
@@ -26,7 +28,7 @@
                 <h5 class="text-lg font-semibold">{{ $photo->title }}</h5>
                 <p class="text-sm text-gray-500 mt-2">{{ $photo->deskripsi }}</p>
                 <p class="text-sm text-gray-600 mt-2">
-                    <strong>Category:</strong> {{ $photo->kategori->nama }}
+                <strong>Category:</strong> {{ $photo->group ? $photo->group->kategori->nama ?? 'Uncategorized' : 'Uncategorized' }}
                 </p>
                 <p class="text-xs text-gray-400 mt-1">{{ $photo->tanggal }}</p>
 

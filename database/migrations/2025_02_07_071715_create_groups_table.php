@@ -8,9 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('photos', function (Blueprint $table) {
+        Schema::create('groups', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('group_id')->nullable()->constrained('groups')->onDelete('cascade');
+            $table->foreignId('kategori_id')->constrained('kategoris')->onDelete('cascade'); 
+            $table->string('title');
+            $table->text('deskripsi')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -18,6 +20,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('photos');
+        Schema::dropIfExists('groups');
     }
 };

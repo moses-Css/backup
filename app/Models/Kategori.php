@@ -9,11 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Kategori extends Model
 {
     use HasFactory;
-
+    protected $table = 'kategoris';
     protected $fillable = ['nama'];
 
-    public function photos(): HasMany
+    public function groups(): HasMany
     {
-        return $this->hasMany(Photo::class);
+        return $this->hasMany(Group::class); 
     }
 }

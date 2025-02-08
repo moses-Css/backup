@@ -20,7 +20,7 @@ export default {
                 primaryLight: "#D0E1FA",
                 secondary: "#F7F7F7",
                 neutralDark: "#1E1E1E",
-                neutralGray: "#898989",
+                neutralGray: "#8d8d8d",
                 neutralGray2: "#E6E6EB",
                 neutralLight: "#0b0b0b",
                 Dangerneutral: "#D20000",
@@ -29,6 +29,12 @@ export default {
                 urbanist: ['Urbanist', 'sans-serif'],
                 sans: ["Figtree", ...defaultTheme.fontFamily.sans],
             },
+
+            borderRadius:{
+                '4xl' : '2rem',
+                '5xl' : '1.5rem',
+                '6xl' : '3rem',
+            }
         },
     },
 

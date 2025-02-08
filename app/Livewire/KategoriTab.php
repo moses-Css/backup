@@ -3,16 +3,22 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use App\Models\Kategori;
 
 class KategoriTab extends Component
 {
-    public $categories = ['all', 'minggu', 'hutri', 'sabtu', 'pancasila', 'perayaan', 'sosial'];
+    public $categories = [];
     public $activeCategory = 'all';
 
-    public function filterCategory($category)
+    public function mount()
     {
-        $this->activeCategory = $category;
-        $this->dispatch('categoryChanged', $category); // ✅ Panggil emit dengan benar
+        $this->categories = Kategori::all(); // Ambil semua data kategori
+    }
+
+    public function filterCategory($categoryId)
+    {
+        $this->activeCategory = $categoryId;
+        $this->dispatch('categoryChanged', $categoryId);
     }
 
     public function render()
