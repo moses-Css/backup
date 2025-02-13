@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use App\Models\ActivityLogs;
+use Illuminate\Support\Facades\Auth;
 
 class KategoriController extends Controller
 {
@@ -21,7 +23,7 @@ class KategoriController extends Controller
      */
     public function create()
     {
-        return view('admin.kategoris.create');
+        return view('dashboard');
     }
 
     /**
@@ -31,7 +33,17 @@ class KategoriController extends Controller
     {
         $request->validate(['nama' => 'required|unique:kategoris']);
         Kategori::create($request->all());
-        return redirect()->route('admin.kategoris.index');
+
+
+        ActivityLogs::create([
+            'user_id'   => Auth::id(),
+            'action'    => 'Menambahkan kategori',
+            'timestamp' => now(),
+            'activity'  => 'Menambahkan ' . 'Kategori ' . $request->nama ,
+            'created_at' => now(),
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Kategori berhasil ditambahkan!');
     }
 
     /**
@@ -58,7 +70,7 @@ class KategoriController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate(['nama' => 'required|unique:kategoris,nama,' . $id]);
-        
+
         $kategori = Kategori::findOrFail($id);
         $kategori->update($request->all());
 

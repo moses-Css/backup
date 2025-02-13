@@ -6,11 +6,15 @@ use App\Models\Photo;
 use App\Models\Kategori;
 use App\Models\Image;
 use App\Models\Group;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Intervention\Image\Facades\Image as ImageIntervention;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ActivityLogs;
+use App\Helpers\LogHelper;
 
 
 
@@ -21,6 +25,11 @@ class PhotoController extends Controller
      */
     public function index()
     {
+
+        $totalPhotos = Photo::count();
+        $totalCategories = Kategori::count();
+        $totalUser = User::count();
+
         $photos = Photo::with(['kategori', 'images'])->latest()->get();
         return view('admin.photos.index', compact('photos'));
     }
@@ -41,7 +50,7 @@ class PhotoController extends Controller
 {
     $request->validate([
         'kategori_id' => 'required|exists:kategoris,id',
-        'title' => 'required|max:255', // Judul grup
+        'title' => 'required|max:255',
         'deskripsi' => 'nullable|string',
         'tanggal' => 'nullable|date',
         'lokasi' => 'nullable|string',
@@ -55,13 +64,20 @@ class PhotoController extends Controller
         'images.*' => 'gambar',
     ]);
 
+    // **Ambil nama kategori berdasarkan kategori_id**
+    $kategori = Kategori::find($request->kategori_id);
 
-    // **1. Buat grup baru otomatis**
+    if (!$kategori) {
+        return redirect()->back()->with('error', 'Kategori tidak ditemukan.');
+    }
+
+    // **1. Buat grup baru**
     $group = Group::create([
         'kategori_id' => $request->kategori_id,
-        'title' => $request->title, // Nama grup dari input
+        'title' => $request->title,
         'deskripsi' => $request->deskripsi,
     ]);
+
     // **2. Buat satu entri di tabel `photos` untuk grup tersebut**
     $photo = $group->photos()->create([
         'kategori_id' => $request->kategori_id,
@@ -71,11 +87,10 @@ class PhotoController extends Controller
 
     // **3. Simpan semua gambar dalam tabel `images`**
     foreach ($request->file('images') as $file) {
-        $folderPath = "photos/{$group->id}"; // Simpan berdasarkan grup
+        $folderPath = "photos/{$group->id}";
         $filename = time() . '_' . $file->getClientOriginalName();
         $path = $file->storeAs($folderPath, $filename, 'public');
 
-        // Simpan informasi gambar
         $photo->images()->create([
             'path' => $path,
             'latitude' => $request->latitude,
@@ -83,6 +98,15 @@ class PhotoController extends Controller
             'waktu' => $request->tanggal ? now() : null,
         ]);
     }
+
+    // **4. Simpan log aktivitas**
+    ActivityLogs::create([
+        'user_id'   => Auth::id(),
+        'action'    => 'Mengunggah foto',
+        'timestamp' => now(),
+        'activity'  => "Menambahkan Foto \"{$request->title}\" di Kategori \"{$kategori->nama}\"",
+        'created_at' => now(),
+    ]);
 
     return redirect()->route('photos.index')->with('success', 'Photo berhasil disimpan dalam grup baru.');
 }

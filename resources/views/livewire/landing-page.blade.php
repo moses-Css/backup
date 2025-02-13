@@ -1,7 +1,7 @@
 <section class="bg-secondary">
     <!-- Hero Section -->
     <livewire:hero-section />
-    <section class=" text-neutralGray px-5">
+    <section class=" text-neutralGray px-5 mb-24">
         @livewire('kategori-tab')
         @livewire('galeri-grid')
     </section>

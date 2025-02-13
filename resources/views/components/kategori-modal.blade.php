@@ -19,7 +19,7 @@
                                 <h2 class="text-2xl font-medium">Kategori Baru</h2>
                                 <label class="block mb-2 text-sm text-neutralGray">Untuk kategorisasi foto dan mempermudah pencarian</label>
                             </div>
-                            <input type="text" name="nama" placeholder="Nama Kategori" class=" w-full p-4 rounded-full border border-neutralGray2">
+                            <input type="text" name="nama" placeholder="Nama Kategori" class=" w-full p-4 rounded-full border border-neutralGray2" required>
                             <div class="mt-4 w-full">
                                 <x-primary-button class="w-full  flex items-center justify-center !rounded-full py-4">Simpan</x-primary-button>
                             </div>

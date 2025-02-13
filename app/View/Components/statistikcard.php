@@ -8,12 +8,16 @@ use Illuminate\View\Component;
 
 class statistikcard extends Component
 {
-    /**
-     * Create a new component instance.
-     */
-    public function __construct()
+
+    public $title;
+    public $count;
+    public $icon;
+
+    public function __construct($title = 'Total Foto', $count = 0, $icon = '')
     {
-        //
+        $this->title = $title;
+        $this->count = $count;
+        $this->icon = $icon;
     }
 
     /**

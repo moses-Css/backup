@@ -55,38 +55,24 @@
     </section>
 
 
-    <section class="flex flex-wrap gap-4 px-10 items-center justify-center mb-4">
+    <section class="flex flex-wrap gap-4 px-5 items-center justify-center mb-24">
         <x-statistik-card
             title="Total Foto"
-            count="2191"
-            icon='<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#0672E8" viewBox="0 0 256 256">
-                    <path
-                        d="M208,34H80A14,14,0,0,0,66,48V66H48A14,14,0,0,0,34,80V208a14,14,0,0,0,14,14H176a14,14,0,0,0,14-14V190h18a14,14,0,0,0,14-14V48A14,14,0,0,0,208,34ZM78,48a2,2,0,0,1,2-2H208a2,2,0,0,1,2,2v74.2l-20.1-20.1a14,14,0,0,0-19.8,0L94.2,178H80a2,2,0,0,1-2-2ZM178,208a2,2,0,0,1-2,2H48a2,2,0,0,1-2-2V80a2,2,0,0,1,2-2H66v98a14,14,0,0,0,14,14h98Zm30-30H111.17l67.41-67.41a2,2,0,0,1,2.83,0L210,139.17V176A2,2,0,0,1,208,178Zm-88-68A22,22,0,1,0,98,88,22,22,0,0,0,120,110Zm0-32a10,10,0,1,1-10,10A10,10,0,0,1,120,78Z">
-                    </path>
-                </svg>'>
+            count="{{$totalImages}}">
+            <x-icon name="images-square" />
         </x-statistik-card>
 
-        <x-statistik-card
-            title="Total Kategori"
-            count="2191"
-            icon='<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#0672E8" viewBox="0 0 256 256">
-                    <path
-                        d="M208,34H80A14,14,0,0,0,66,48V66H48A14,14,0,0,0,34,80V208a14,14,0,0,0,14,14H176a14,14,0,0,0,14-14V190h18a14,14,0,0,0,14-14V48A14,14,0,0,0,208,34ZM78,48a2,2,0,0,1,2-2H208a2,2,0,0,1,2,2v74.2l-20.1-20.1a14,14,0,0,0-19.8,0L94.2,178H80a2,2,0,0,1-2-2ZM178,208a2,2,0,0,1-2,2H48a2,2,0,0,1-2-2V80a2,2,0,0,1,2-2H66v98a14,14,0,0,0,14,14h98Zm30-30H111.17l67.41-67.41a2,2,0,0,1,2.83,0L210,139.17V176A2,2,0,0,1,208,178Zm-88-68A22,22,0,1,0,98,88,22,22,0,0,0,120,110Zm0-32a10,10,0,1,1-10,10A10,10,0,0,1,120,78Z">
-                    </path>
-                </svg>'>
+        <x-statistik-card title="Total Kategori" count="{{$totalCategories}}">
+            <x-icon name="list-dashes" />
         </x-statistik-card>
 
         <x-statistik-card
             title="Total User"
-            count="2191"
-            icon='<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#0672E8" viewBox="0 0 256 256">
-                    <path
-                        d="M208,34H80A14,14,0,0,0,66,48V66H48A14,14,0,0,0,34,80V208a14,14,0,0,0,14,14H176a14,14,0,0,0,14-14V190h18a14,14,0,0,0,14-14V48A14,14,0,0,0,208,34ZM78,48a2,2,0,0,1,2-2H208a2,2,0,0,1,2,2v74.2l-20.1-20.1a14,14,0,0,0-19.8,0L94.2,178H80a2,2,0,0,1-2-2ZM178,208a2,2,0,0,1-2,2H48a2,2,0,0,1-2-2V80a2,2,0,0,1,2-2H66v98a14,14,0,0,0,14,14h98Zm30-30H111.17l67.41-67.41a2,2,0,0,1,2.83,0L210,139.17V176A2,2,0,0,1,208,178Zm-88-68A22,22,0,1,0,98,88,22,22,0,0,0,120,110Zm0-32a10,10,0,1,1-10,10A10,10,0,0,1,120,78Z">
-                    </path>
-                </svg>'>
+            count="{{$totalUsers}}">
+            <x-icon name="users" />
         </x-statistik-card>
     </section>
-    <div class="py-12">
+    <!-- <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class=" overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 ">
@@ -94,5 +80,99 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
+
+    <section class="max-w-7xl relative mx-auto px-5 md:px-10 py-16 h-fit mb-24  rounded-4xl shadow-md outline-double">
+        <div class="flex w-full">
+            <div class="absolute size-4 bg-primary top-6 left-6 rounded-full"></div>
+            <div class="absolute size-4 bg-primary top-6 left-[52px] rounded-full"></div>
+            <div class="absolute size-4 bg-primary top-6 left-20 rounded-full"></div>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-medium text-neutral-dark mb-4">Log</h2>
+
+        <!-- Search & Date Filter -->
+        <div class="grid grid-cols-2 items-center space-x-5 mb-4 *:border-neutralGray2 text-neutralGray">
+            <div class="relative w-full ">
+                <input type="text" placeholder="Cari"
+                    class="w-full border border-neutralGray2 p-3 pr-16 pl-5 rounded-full bg-white focus:outline-none">
+
+                <button class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-primary p-2 rounded-full text-white flex items-center justify-center">
+                    <x-icon name="magnifying-glass" />
+                </button>
+            </div>
+
+            <div class="border py-2 px-2 md:px-5 rounded-full items-center flex">
+                <input type="text" id="dateRange" class=" text-primary bg-transparent outline-none cursor-pointer w-full border-none focus:ring-0 active:outline-none" readonly>
+                <x-icon name="calendar" />
+            </div>
+        </div>
+
+        <!-- Tab Filters -->
+        <div class="flex space-x-4 mb-4">
+            <button class="text-primary font-medium">Semua</button>
+            <button class="text-neutral-gray font-medium">Foto</button>
+            <button class="text-neutral-gray font-medium">Kategori</button>
+            <button class="text-neutral-gray font-medium">Log Login</button>
+        </div>
+
+        <!-- Log Table -->
+        <div class="overflow-x-auto rounded-lg border border-neutral-gray">
+            <table class="min-w-full">
+                <thead class="">
+                    <tr class="*: boder border-b-neutralGray2 text-neutralDark dark:text-secondary ">
+                        <th class="px-4 py-3 text-left text-sm font-semibold">User</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold">Activity</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold">Tanggal</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y ">
+                    @foreach ($logs as $log)
+                    <tr class="border-b-neutralGray2 hover:bg-gray-50 transition-colors">
+                        <!-- Kolom User -->
+                        <td class="px-4 py-3 text-sm text-neutral-dark align-top min-w-[200px]">
+                            <div class="flex items-center space-x-3">
+                                <span class="font-medium truncate">{{ $log->user->name }}</span>
+                            </div>
+                        </td>
+
+                        <!-- Kolom Activity -->
+                        <td class="px-4 py-3 text-sm text-neutral-dark align-top max-w-[300px]">
+                            <div class="truncate">{{ $log->activity }}</div>
+                        </td>
+
+                        <!-- Kolom Tanggal -->
+                        <td class="px-4 py-3 text-sm text-neutral-dark align-top whitespace-nowrap">
+                            {{ \Carbon\Carbon::parse($log->created_at)->format('d M Y, H:i') }} WIB
+                        </td>
+
+                        <!-- Kolom Aksi -->
+                        <td class="px-4 py-3 text-sm text-neutral-dark align-top">
+                            <form action="{{ route('logs.delete', $log->id) }}" method="POST" onsubmit="return confirm('Hapus log ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="p-2  rounded-full transition-colors bg-primaryLight">
+                                    <x-icon name="trash" class="" />
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <form action="{{ route('logs.clear') }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus semua log?')" class="text-center mt-4">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="bg-primary text-white px-4 py-2 rounded-xl hover:bg-primary/80 transition-colors duration-300">Hapus Semua Log</button>
+        </form>
+        {{ $logs->links() }}
+    </section>
+
+    <section class="mb-24 px-5">
+        @livewire('kategori-tab')
+        @livewire('galeri-grid')
+    </section>
 </x-app-layout>

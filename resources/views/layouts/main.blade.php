@@ -18,9 +18,10 @@
         rel="stylesheet">
 
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link href="{{ asset('/build/assets/app.css') }}" rel="stylesheet">
+    <script src="{{ asset('/build/assets/app.js') }}"></script>
 
-    
+
 </head>
 
 
@@ -39,13 +40,13 @@ BODYBODYBODYBODYBODYBODYBODYBODYBODYBODYBODYBODY -->
 
     <div class="w-full  bg-secondary dark:bg-neutralDark  overflow-hidden sm:rounded-lg  ">
         <!-- Tombol Toggle Dark Mode -->
-        
+
 
         @yield('content')
     </div>
 </body>
 
-<x-footers/>
+<x-footers />
 
 
 </html>
