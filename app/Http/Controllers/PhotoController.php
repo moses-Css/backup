@@ -34,6 +34,43 @@ class PhotoController extends Controller
         return view('admin.photos.index', compact('photos'));
     }
 
+    public function search(Request $request)
+    {
+        $categoryId = $request->query('category');
+        $searchTerm = $request->query('query');
+
+        if ($categoryId) {
+            // Search by category
+            $kategori = Kategori::findOrFail($categoryId);
+            $groups = $kategori->groups()
+                ->with(['photos.images'])
+                ->get();
+
+            return view('search.index', [
+                'type' => 'category',
+                'kategori' => $kategori,
+                'groups' => $groups
+            ]);
+        } elseif ($searchTerm) {
+            // Search by group title
+            $groups = Group::where('title', 'like', "%{$searchTerm}%")
+                ->with(['photos.images'])
+                ->get();
+
+            $images = $groups->flatMap(function ($group) {
+                return $group->photos->flatMap->images;
+            });
+
+            return view('search.index', [
+                'type' => 'query',
+                'searchTerm' => $searchTerm,
+                'images' => $images
+            ]);
+        }
+
+        return view('search.index');
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -47,69 +84,69 @@ class PhotoController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    $request->validate([
-        'kategori_id' => 'required|exists:kategoris,id',
-        'title' => 'required|max:255',
-        'deskripsi' => 'nullable|string',
-        'tanggal' => 'nullable|date',
-        'lokasi' => 'nullable|string',
-        'latitude' => 'nullable|numeric',
-        'longitude' => 'nullable|numeric',
-        'images'   => 'required|array',
-        'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:20480',
-    ], [
-        'images.*.max' => 'Ukuran file :attribute tidak boleh lebih dari 20MB.',
-    ], [
-        'images.*' => 'gambar',
-    ]);
-
-    // **Ambil nama kategori berdasarkan kategori_id**
-    $kategori = Kategori::find($request->kategori_id);
-
-    if (!$kategori) {
-        return redirect()->back()->with('error', 'Kategori tidak ditemukan.');
-    }
-
-    // **1. Buat grup baru**
-    $group = Group::create([
-        'kategori_id' => $request->kategori_id,
-        'title' => $request->title,
-        'deskripsi' => $request->deskripsi,
-    ]);
-
-    // **2. Buat satu entri di tabel `photos` untuk grup tersebut**
-    $photo = $group->photos()->create([
-        'kategori_id' => $request->kategori_id,
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
-
-    // **3. Simpan semua gambar dalam tabel `images`**
-    foreach ($request->file('images') as $file) {
-        $folderPath = "photos/{$group->id}";
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $path = $file->storeAs($folderPath, $filename, 'public');
-
-        $photo->images()->create([
-            'path' => $path,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'waktu' => $request->tanggal ? now() : null,
+    {
+        $request->validate([
+            'kategori_id' => 'required|exists:kategoris,id',
+            'title' => 'required|max:255',
+            'deskripsi' => 'nullable|string',
+            'tanggal' => 'nullable|date',
+            'lokasi' => 'nullable|string',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'images'   => 'required|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:20480',
+        ], [
+            'images.*.max' => 'Ukuran file :attribute tidak boleh lebih dari 20MB.',
+        ], [
+            'images.*' => 'gambar',
         ]);
+
+        // **Ambil nama kategori berdasarkan kategori_id**
+        $kategori = Kategori::find($request->kategori_id);
+
+        if (!$kategori) {
+            return redirect()->back()->with('error', 'Kategori tidak ditemukan.');
+        }
+
+        // **1. Buat grup baru**
+        $group = Group::create([
+            'kategori_id' => $request->kategori_id,
+            'title' => $request->title,
+            'deskripsi' => $request->deskripsi,
+        ]);
+
+        // **2. Buat satu entri di tabel `photos` untuk grup tersebut**
+        $photo = $group->photos()->create([
+            'kategori_id' => $request->kategori_id,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // **3. Simpan semua gambar dalam tabel `images`**
+        foreach ($request->file('images') as $file) {
+            $folderPath = "photos/{$group->id}";
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs($folderPath, $filename, 'public');
+
+            $photo->images()->create([
+                'path' => $path,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+                'waktu' => $request->tanggal ? now() : null,
+            ]);
+        }
+
+        // **4. Simpan log aktivitas**
+        ActivityLogs::create([
+            'user_id'   => Auth::id(),
+            'action'    => 'Mengunggah foto',
+            'timestamp' => now(),
+            'activity'  => "Menambahkan Foto \"{$request->title}\" di Kategori \"{$kategori->nama}\"",
+            'created_at' => now(),
+        ]);
+
+        return redirect()->route('photos.index')->with('success', 'Photo berhasil disimpan dalam grup baru.');
     }
-
-    // **4. Simpan log aktivitas**
-    ActivityLogs::create([
-        'user_id'   => Auth::id(),
-        'action'    => 'Mengunggah foto',
-        'timestamp' => now(),
-        'activity'  => "Menambahkan Foto \"{$request->title}\" di Kategori \"{$kategori->nama}\"",
-        'created_at' => now(),
-    ]);
-
-    return redirect()->route('photos.index')->with('success', 'Photo berhasil disimpan dalam grup baru.');
-}
 
 
     // Tambahkan method edit, update, show, destroy

@@ -21,9 +21,9 @@ class AdminController extends Controller
         $totalUsers = User::count();
         $category = 'Semua';
         $logs = ActivityLogs::with('user')->latest()->paginate(10);
+        $kategoris = Kategori::all();
         
-
-        return view('dashboard', compact('totalImages', 'totalCategories', 'totalUsers', 'logs','category'));
+        return view('dashboard', compact('totalImages','totalCategories', 'totalUsers', 'logs','category', 'kategoris'));
     }
 
     /**

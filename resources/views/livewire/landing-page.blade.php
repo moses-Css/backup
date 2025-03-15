@@ -2,6 +2,9 @@
     <!-- Hero Section -->
     <livewire:hero-section />
     <section class=" text-neutralGray px-5 mb-24">
+        <div class="flex justify-center text-neutralDark items-center mb-4">
+            <h2 class="text-lg md:text-3xl font-medium">Kategori</h2>
+        </div>
         @livewire('kategori-tab')
         @livewire('galeri-grid')
     </section>

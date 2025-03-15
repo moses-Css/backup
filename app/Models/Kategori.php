@@ -14,6 +14,18 @@ class Kategori extends Model
 
     public function groups(): HasMany
     {
-        return $this->hasMany(Group::class); 
+        return $this->hasMany(Group::class);
+    }
+
+    public function getThumbnailAttribute()
+    {
+        return $this->groups->first()?->photos->first()?->images->first()?->path;
+    }
+
+    protected static function booted()
+    {
+        static::deleting(function ($kategori) {
+            $kategori->groups->each->delete();
+        });
     }
 }

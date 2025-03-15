@@ -14,3 +14,4 @@ $(function() {
         $('#dateRange').val(start.format('MMM DD, YYYY') + ' - ' + end.format('MMM DD, YYYY'));
     });
 });
+

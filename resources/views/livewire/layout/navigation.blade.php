@@ -79,9 +79,19 @@ new class extends Component
                 <div class="sm:flex sm:items-center sm:ms-6">
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
-                            <button class="inline-flex items-end px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-neutralgray dark:text-gray-400 bg-neutralGray2 dark:bg-neutralDark hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                                <div x-data="{ name: '{{ auth()->check() ? auth()->user()->name : 'Guest' }}' }" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
+                            <button class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md text-neutralgray dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                                <!-- Avatar & Name -->
+                                <div class="flex items-center space-x-2">
+                                    <div class="size-8 rounded-full bg-gradient-to-r from-blue-500 to-sky-400 flex items-center justify-center text-white font-semibold">
+                                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                    </div>
+                                    <div x-data="{ name: '{{ auth()->check() ? auth()->user()->name : 'Guest' }}' }"
+                                        x-text="name"
+                                        x-on:profile-updated.window="name = $event.detail.name">
+                                    </div>
+                                </div>
 
+                                <!-- Dropdown Icon -->
                                 <div class="ms-1">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -103,6 +113,7 @@ new class extends Component
                             </button>
                         </x-slot>
                     </x-dropdown>
+
                 </div>
                 @else
                 <!-- Login Button -->

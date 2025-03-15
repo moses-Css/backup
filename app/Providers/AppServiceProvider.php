@@ -38,8 +38,17 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
 
-        if (config('app.env') === 'production') {
+
+        // https
+        // if (config('app.env') === 'production') {
+        //     URL::forceScheme('https');
+        // }
+
+        // http
+        if (config('app.env') === 'production' && request()->isSecure()) {
             URL::forceScheme('https');
         }
+        
+        
     }
 }

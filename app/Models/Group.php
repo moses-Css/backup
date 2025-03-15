@@ -23,4 +23,16 @@ class Group extends Model
     {
         return $this->hasMany(Photo::class);
     }
+
+    public function getThumbnailAttribute()
+    {
+        return $this->photos->first()?->images->first()?->path;
+    }
+
+    protected static function booted()
+    {
+        static::deleting(function ($group) {
+            $group->photos->each->delete();
+        });
+    }
 }

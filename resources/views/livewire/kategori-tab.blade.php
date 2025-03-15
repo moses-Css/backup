@@ -1,9 +1,7 @@
 <div class="mx-auto">
-    <div class="flex justify-center text-neutralDark items-center mb-4">
-        <h2 class="text-lg md:text-3xl font-medium">Kategori</h2>
-    </div>
+   
 
-    <div class="flex space-x-2 overflow-x-auto whitespace-nowrap *:rounded-full *:px-4 *:py-3 text-xs md:text-sm sm:justify-center">
+    <div class="flex space-x-2 overflow-x-auto whitespace-nowrap *:rounded-full *:px-4 *:py-2 text-xs md:text-sm sm:justify-center">
         <button
             wire:click="filterCategory('all')"
             class="{{ $activeCategory === 'all' ? 'bg-primaryLight text-primary' : 'text-neutralGray' }}">

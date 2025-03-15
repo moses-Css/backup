@@ -30,4 +30,11 @@ class Photo extends Model
     {
         return $this->hasMany(Image::class);
     }
+
+    protected static function booted()
+    {
+        static::deleting(function ($photo) {
+            $photo->images->each->delete();
+        });
+    }
 }

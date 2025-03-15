@@ -2,13 +2,14 @@
     class=" text-neutralDark text-center bg-secondary dark:bg-neutralDark  bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#E6E6EB_1px,transparent_1px)] [background-size:16px_16px] ">
     <div class="px-10 pb-24 pt-12">
         <div class="w-full items-center mx-auto ">
-            <img class="max-w-40 items-center mx-auto flex justify-center " src="https://th.bing.com/th/id/R.ea4ef2b2cddf55809d29b4fbcc4a0de0?rik=p9mBJRzXeaBfYA&riu=http%3a%2f%2flofrev.net%2fwp-content%2fphotos%2f2017%2f05%2fBKKBN_logo.png&ehk=nR0a8hdc6TGyxFY2OXs285c8evQz0oT7xuiSyOzXm6o%3d&risl=&pid=ImgRaw&r=0" alt="">
-            <x-head-hero>
+        <img class="max-w-40 items-center mx-auto flex justify-center" src="{{ asset('build/assets/logo/logoapp.png') }}" alt="Logo">
+
+            <x-head-hero id="x-head-text" style="clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);">
                 {{__('Galeri Digital BKKBN')}}
             </x-head-hero>
-            <x-text-hero>{{__('Platform resmi untuk mengelola, menyimpan, dan mengakses foto
+            <x-text-hero data-aos="fade-up" data-aos-duration="1000" style="clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);" >{{__('Platform resmi untuk mengelola, menyimpan, dan mengakses foto
                     dokumentasi BKKBN dengan mudah, aman, dan terstruktur.')}}</x-text-hero>
-                    
+
         </div>
 
 
@@ -42,4 +43,6 @@
         </div>
 
     </div>
+  
+</script>
 </section>

@@ -41,5 +41,11 @@ Route::get('dashboard', [AdminController::class, 'dashboard'])->middleware(['aut
 // Route untuk menampilkan foto yang bisa diakses siapa saja
 Route::get('photos/{photo}', [PhotoController::class, 'show'])->name('photos.show');
 
+Route::get('/search', [PhotoController::class, 'search'])->name('search.index');
+Route::get('/file-explorer', function () {
+    return view('livewire.file-explorer');
+})->name('file.explorer');
+
+
 // Untuk autentikasi
 require __DIR__ . '/auth.php';
