@@ -24,10 +24,12 @@ Route::prefix('admin')->middleware(['auth', 'role:admin|pegawai'])->group(functi
     Route::resource('kategoris', KategoriController::class);
 });
 
+// Route for logs
 Route::middleware(['auth', 'role:admin|pegawai'])->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-});
-Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/logs', function () {
+        return view('admin.log');
+    })->name('log');
+
     Route::delete('/logs/clear', [ActivityLogsController::class, 'clearAllLogs'])->name('logs.clear');
     Route::delete('/logs/{id}', [ActivityLogsController::class, 'deleteLog'])->name('logs.delete');
 });
@@ -46,6 +48,7 @@ Route::get('/file-explorer', function () {
     return view('livewire.file-explorer');
 })->name('file.explorer');
 
-
+Route::put('/groups/{group}/title', [PhotoController::class, 'updateGroupTitle'])
+    ->name('groups.updateTitle');
 // Untuk autentikasi
 require __DIR__ . '/auth.php';

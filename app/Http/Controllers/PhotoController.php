@@ -186,10 +186,25 @@ class PhotoController extends Controller
             'lokasi' => 'required',
         ]);
 
+        // **Cek apakah kategori berubah**
+        if ($photo->kategori_id !== $request->kategori_id) {
+            $kategori = Kategori::find($request->kategori_id);
+            if (!$kategori) {
+                return redirect()->back()->with('error', 'Kategori tidak ditemukan.');
+            }
+        }
+
+        // **Cek apakah title berubah, lalu update di tabel groups**
+        if ($photo->group && $photo->group->title !== $request->title) {
+            $photo->group->update(['title' => $request->title]);
+        }
+
+        // **Update data photo**
         $photo->update($request->only('kategori_id', 'title', 'deskripsi', 'tanggal', 'lokasi'));
 
-        return redirect()->route('photos.index');  // Redirect back to the list page
+        return redirect()->route('photos.index')->with('success', 'Photo berhasil diperbarui.');
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -234,5 +249,18 @@ class PhotoController extends Controller
         }
 
         return redirect()->route('photos.index')->with('success', 'Selected photos deleted successfully.');
+    }
+    // PhotoController.php
+    public function updateGroupTitle(Request $request, Group $group)
+    {
+        $request->validate(['title' => 'required|max:255']);
+
+        $group->update(['title' => $request->title]);
+
+        return response()->json([
+            'success' => true,
+            'new_title' => $group->title,
+            'group_id' => $group->id
+        ]);
     }
 }

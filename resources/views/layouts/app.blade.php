@@ -15,16 +15,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
-    <script src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"> -->
     @livewireStyles
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <!-- <link href="{{ secure_asset('/build/assets/app.css') }}" rel="stylesheet">
     <script src="{{ secure_asset('/build/assets/app.js') }}"></script> -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
 
 
 
@@ -35,12 +34,15 @@ $currentRoute = Route::currentRouteName();
 @endphp
 
 <body class="font-urbanist antialiased bg-secondary ">
+    <style>
+         [x-cloak] { display: none !important; }
+    </style>
     <x-sidebar />
     <x-kategori-modal />
     <x-foto-modal />
 
     <!-- Main Content Area -->
-    <div class="min-h-screen md:ml-64 flex flex-col overflow-y-auto"> <!-- Perubahan disini -->
+    <div class="min-h-screen md:ml-64 flex flex-col overflow-y-auto"> 
         @if ($currentRoute !== 'dashboard')
         <livewire:layout.navigation />
         @endif
@@ -55,7 +57,7 @@ $currentRoute = Route::currentRouteName();
         @endif
 
         <!-- Page Content -->
-        <main class="flex-grow"> <!-- Perubahan disini -->
+        <main class="flex-grow"> 
             {{ $slot }}
         </main>
 
@@ -85,8 +87,6 @@ $currentRoute = Route::currentRouteName();
         document.addEventListener('livewire:init', () => {
             Livewire.on('updateUrl', (path) => {
                 const url = new URL(window.location);
-                url.searchParams.set('path', JSON.stringify(path));
-                window.history.pushState({}, '', url);
             });
 
             window.addEventListener('popstate', () => {

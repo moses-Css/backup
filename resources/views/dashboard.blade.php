@@ -1,6 +1,6 @@
 <x-app-layout>
 
-    <nav class="w-full flex items-center justify-between border-b p-6 sticky top-0 z-30 bg-secondary">
+    <nav class="w-full flex flex-wrap items-center justify-between px-4 py-3 sm:p-6 sticky top-0 z-30 bg-secondary">
         <!-- Hamburger Menu (Mobile) -->
         <button onclick="toggleSidebar()" class="md:hidden p-2 rounded-full hover:bg-gray-200 transition">
             ☰
@@ -9,7 +9,7 @@
         <!-- Title -->
         <div class="text-center md:text-left flex-1">
             <h1 class="text-sm sm:text-lg font-light">Halo, {{ auth()->user()->name }}</h1>
-            <x-head-hero>
+            <x-head-hero class="text-xl sm:text-2xl">
                 {{__('Partner Dashboard')}}
             </x-head-hero>
         </div>
@@ -109,53 +109,53 @@
     </div>
     @endif
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 w-full">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-3 sm:p-4">
     <!-- Statistik 1 -->
-    <div class="relative bg-primary text-secondary rounded-3xl p-8 h-full flex flex-col justify-between overflow-hidden">
+    <div class="bg-primary text-secondary rounded-2xl p-4 sm:p-6 flex flex-col justify-between min-h-[150px]">
         <div>
-            <div class="flex justify-between">
+            <div class="flex justify-between items-start">
                 <div>
-                    <h2 class="text-xl md:text-3xl font-medium">Total Foto</h2>
-                    <p>Rekap tahun {{ now()->year }}</p>
+                    <h2 class="text-lg sm:text-xl md:text-2xl font-medium">Total Foto</h2>
+                    <p class="text-xs sm:text-sm">Rekap tahun {{ now()->year }}</p>
                 </div>
                 <div class="hidden md:flex border rounded-full p-2 items-center">
-                    <x-icon name="arrow-up-white" />
+                    <x-icon class="hidden sm:block w-6 h-6" name="arrow-up-white" />
                 </div>
             </div>
         </div>
-        <h1 class="text-6xl md:text-7xl font-medium">{{ $totalImages }}</h1>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mt-2">{{ $totalImages }}</h1>
     </div>
 
     <!-- Statistik 2 -->
-    <div class="relative text-neutralDark rounded-3xl p-8 h-full flex flex-col justify-between overflow-hidden border">
+    <div class=" text-neutralDark border rounded-2xl p-4 sm:p-6 flex flex-col justify-between min-h-[150px]">
         <div>
-            <div class="flex justify-between">
+            <div class="flex justify-between items-start">
                 <div>
-                    <h2 class="text-xl md:text-3xl font-medium">Total Kategori</h2>
-                    <p>Rekap tahun {{ now()->year }}</p>
+                    <h2 class="text-lg sm:text-xl md:text-2xl font-medium">Total Kategori</h2>
+                    <p class="text-xs sm:text-sm">Rekap tahun {{ now()->year }}</p>
                 </div>
                 <div class="hidden md:flex border rounded-full p-2 items-center">
-                    <x-icon name="arrow-up-white" />
+                    <x-icon class="hidden sm:block w-6 h-6" name="arrow-up-white" />
                 </div>
             </div>
         </div>
-        <h1 class="text-6xl md:text-7xl font-medium">{{ $totalCategories }}</h1>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mt-2">{{ $totalCategories }}</h1>
     </div>
 
     <!-- Statistik 3 -->
-    <div class="relative bg-primary text-secondary rounded-3xl p-8 h-full flex flex-col justify-between overflow-hidden">
+    <div class="bg-primary text-secondary rounded-2xl p-4 sm:p-6 flex flex-col justify-between min-h-[150px]">
         <div>
-            <div class="flex justify-between">
+            <div class="flex justify-between items-start">
                 <div>
                     <h2 class="text-xl md:text-3xl font-medium">Total User</h2>
-                    <p>Rekap tahun {{ now()->year }}</p>
+                    <p class="text-xs sm:text-sm">Rekap tahun {{ now()->year }}</p>
                 </div>
                 <div class="hidden md:flex border rounded-full p-2 items-center">
-                    <x-icon name="arrow-up-white" />
+                    <x-icon class="hidden sm:block w-6 h-6" name="arrow-up-white" />
                 </div>
             </div>
         </div>
-        <h1 class="text-6xl md:text-7xl font-medium">{{ $totalUsers }}</h1>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mt-2">{{ $totalUsers }}</h1>
     </div>
 
     <!-- File Explorer - Full Width -->
@@ -163,5 +163,4 @@
         <livewire:file-explorer />
     </div>
 </div>
-
 </x-app-layout>

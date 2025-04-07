@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -17,13 +17,26 @@ class ActivityLogsTable extends Component
     public $endDate = null;
 
     // Reset pagination saat properti berubah
-    protected $updatesQueryString = ['search', 'category', 'startDate', 'endDate'];
+    protected $queryString = [
+        'search' => ['except' => '', 'as' => 'q'],
+        'category' => ['except' => 'Semua'],
+        'startDate' => ['as' => 'from'],
+        'endDate' => ['as' => 'to']
+    ];
 
     protected $listeners = [
         'setDateRange' => 'setDateRange',
         'clearDateRange' => 'clearDateRange'
     ];
 
+
+    public function updatedSearch()
+    {
+        // Jika search kosong, reset pagination
+        if (empty($this->search)) {
+            $this->resetPage();
+        }
+    }
     public function updatingSearch()
     {
         $this->resetPage();
@@ -64,45 +77,56 @@ class ActivityLogsTable extends Component
     }
 
     public function render()
-{
-    $query = ActivityLogs::with('user');
+    {
+        $query = ActivityLogs::with('user')
+            ->when($this->search, function ($q) {
+                $q->where(function ($query) {
+                    $query->whereHas('user', function ($q) {
+                        $q->where('name', 'like', '%' . $this->search . '%');
+                    })
+                        ->orWhere('activity', 'like', '%' . $this->search . '%')
+                        ->orWhere('created_at', 'like', '%' . $this->search . '%');
+                });
+            });
 
-    // Penerapan filter pencarian
-    if (!empty($this->search)) {
-        $query->where(function ($q) {
-            $q->whereHas('user', function($q2) {
-                $q2->where('name', 'like', '%' . $this->search . '%');
-            })->orWhere('activity', 'like', '%' . $this->search . '%');
-        });
-    }
-
-    // Filter berdasarkan kategori
-    if ($this->category !== 'Semua') {
-        if ($this->category == 'Login') {
-            // Corrected: Use 'activity' instead of 'action'
-            $query->whereIn('activity', ['login', 'logout']);
-        } elseif ($this->category == 'Foto') {
-            // Corrected: Use 'activity'
-            $query->where('activity', 'Menambahkan foto baru');
-        } elseif ($this->category == 'Kategori') {
-            // Corrected: Use 'activity'
-            $query->where('activity', 'Menambahkan kategori');
+        // Filter berdasarkan kategori
+        if ($this->category !== 'Semua') {
+            $query->where(function ($q) {
+                switch ($this->category) {
+                    case 'Login':
+                        $q->where(function($query) {
+                            $query->where('activity', 'like', '%login%')
+                                  ->orWhere('activity', 'like', '%logout%');
+                        });
+                        break;
+                    case 'Foto':
+                        $q->where(function($query) {
+                            $query->where('activity', 'like', '%foto%')
+                                  ->orWhere('activity', 'like', '%photo%')
+                                  ->orWhere('activity', 'like', '%image%');
+                        });
+                        break;
+                    case 'Kategori':
+                        $q->where(function($query) {
+                            $query->where('activity', 'like', '%kategori%')
+                                  ->orWhere('activity', 'like', '%category%');
+                        });
+                        break;
+                }
+            });
         }
+
+        // Filter tanggal
+        if ($this->startDate && $this->endDate) {
+            $query->whereBetween('created_at', [
+                Carbon::parse($this->startDate)->startOfDay()->timezone('Asia/Jakarta'),
+                Carbon::parse($this->endDate)->endOfDay()->timezone('Asia/Jakarta')
+            ]);
+        }
+
+        // Ambil data logs
+        $logs = $query->latest()->paginate(10);
+
+        return view('livewire.activity-logs-table', compact('logs'));
     }
-
-    // Filter tanggal
-    if ($this->startDate && $this->endDate) {
-        $query->whereBetween('created_at', [
-            Carbon::parse($this->startDate)->startOfDay(), 
-            Carbon::parse($this->endDate)->endOfDay()
-        ]);
-    }
-
-    // Ambil data logs
-    $logs = $query->latest()->paginate(10);
-
-    return view('livewire.activity-logs-table', [
-        'logs' => $logs, // Pastikan variabel $logs diteruskan
-    ]);
-}
 }

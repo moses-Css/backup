@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title') BKKBN.Galeri</title>
+    @livewireStyles
 
 
     <!-- Fonts -->
@@ -33,6 +34,7 @@
     <div class="w-full  bg-secondary dark:bg-neutralDark  overflow-hidden sm:rounded-lg  ">
         @yield('content')
     </div>
+    @livewireScripts
 
     <script>
         AOS.init();

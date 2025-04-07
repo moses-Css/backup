@@ -28,25 +28,53 @@ class FileExplorer extends Component
         'show-preview' => 'handleShowPreview'
     ];
 
-    
-    public function handleKeyDown($event = null)
+
+    public function handleKeyDown($key = null)
     {
-        if ($event && $event['key'] === 'Shift') {
+        if ($key === 'Shift') {
             $this->shiftPressed = true;
         }
-        if ($event && ($event['key'] === 'Control' || $event['key'] === 'Meta')) {
+        if ($key === 'Control') {
             $this->ctrlPressed = true;
         }
     }
 
-    public function handleKeyUp($event = null)
+    public function handleKeyUp($key = null)
     {
-        if ($event && $event['key'] === 'Shift') {
+        if ($key === 'Shift') {
             $this->shiftPressed = false;
         }
-        if ($event && ($event['key'] === 'Control' || $event['key'] === 'Meta')) {
+        if ($key === 'Control') {
             $this->ctrlPressed = false;
         }
+    }
+
+    public function getItemsProperty()
+    {
+        $currentLevel = count($this->path);
+        $items = collect();
+
+        if ($currentLevel === 0) {
+            $items = Kategori::with(['groups.photos.images'])
+                ->get(['id', 'nama'])
+                ->each(function ($kategori) {
+                    $kategori->groups->each(function ($group) {
+                        $group->total_images = $group->photos->sum(fn($photo) => $photo->images->count());
+                    });
+                });
+        } elseif ($currentLevel === 1) {
+            $items = Group::where('kategori_id', $this->path[0])
+                ->with(['photos.images'])
+                ->get(['id', 'kategori_id', 'title'])
+                ->each(function ($group) {
+                    $group->total_images = $group->photos->sum(fn($photo) => $photo->images->count());
+                });
+        } elseif ($currentLevel === 2) {
+            $items = Image::whereHas('photo', fn($q) => $q->where('group_id', $this->path[1]))
+                ->get(['id', 'photo_id', 'path']);
+        }
+
+        return $items;
     }
 
     public function enableShiftSelection()
@@ -59,9 +87,9 @@ class FileExplorer extends Component
         $this->shiftPressed = false;
     }
 
-    public function selectItem($id)
+    public function selectItem($id, $shiftKey = false)
     {
-        if ($this->shiftPressed && $this->lastSelectedId !== null) {
+        if ($this->shiftPressed || $shiftKey) {
             $this->handleShiftSelection($id);
         } elseif ($this->ctrlPressed) {
             $this->handleCtrlSelection($id);
@@ -77,6 +105,9 @@ class FileExplorer extends Component
         $currentIds = $this->items->pluck('id')->toArray();
         $lastIndex = array_search($this->lastSelectedId, $currentIds);
         $currentIndex = array_search($id, $currentIds);
+
+        // Handle jika item tidak ditemukan
+        if ($lastIndex === false || $currentIndex === false) return;
 
         $start = min($lastIndex, $currentIndex);
         $end = max($lastIndex, $currentIndex);
@@ -101,7 +132,6 @@ class FileExplorer extends Component
         $this->selectedItems = [$id];
     }
 
-    // Unselect all items
     public function unselectAll()
     {
         $this->selectedItems = [];
@@ -147,15 +177,28 @@ class FileExplorer extends Component
                 Image::find($id)->delete();
                 break;
         }
-
+        $this->path = []; // Reset path jika perlu
+        $this->updateBreadcrumbs();
+        $this->selectedItems = [];
 
         $this->selectedItems = array_diff($this->selectedItems, [$id]);
     }
 
     public function confirmDelete($data)
-    {
+{
+    try {
         $this->deleteItem($data['id']);
+        $this->dispatch('show-toast', 'Item deleted successfully');
+        
+        // Force refresh data
+        $this->path = [];
+        $this->updateBreadcrumbs();
+        $this->selectedItems = [];
+        
+    } catch (\Exception $e) {
+        $this->dispatch('error', 'Failed to delete item: ' . $e->getMessage());
     }
+}
 
     public function updatedPath()
     {
@@ -237,9 +280,10 @@ class FileExplorer extends Component
             $this->path = [];
         } elseif ($index === 1) {
             $this->path = [$this->breadcrumbs[1]['id']];
-        } elseif ($index === 2) {
+        } elseif ($index === 2 && isset($this->breadcrumbs[2])) {
             $this->path = [$this->breadcrumbs[1]['id'], $this->breadcrumbs[2]['id']];
         }
+
         $this->updateBreadcrumbs();
         $this->selectedItems = [];
     }
@@ -279,9 +323,13 @@ class FileExplorer extends Component
         } elseif ($currentLevel === 2) {
             $currentType = 'image';
             $items = Image::whereHas('photo', fn($q) => $q->where('group_id', $this->path[1]))
+                ->orderBy('id') // Tambah pengurutan
                 ->get(['id', 'photo_id', 'path']);
         }
 
-        return view('livewire.file-explorer', compact('items', 'currentType'));
+        return view('livewire.file-explorer', [
+            'items' => $this->items,
+            'currentType' => $currentType,
+        ]);
     }
 }

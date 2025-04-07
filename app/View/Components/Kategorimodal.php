@@ -23,4 +23,6 @@ class Kategorimodal extends Component
     {
         return view('components.kategori-modal');
     }
+
+    
 }

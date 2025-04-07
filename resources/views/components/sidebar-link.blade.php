@@ -1,7 +1,7 @@
 @props([
     'icon',
     'iconClass' => '', // Hapus !fill-neutralDark agar bisa dikontrol
-    'route'
+    'route' => 'null'
 ])
 
 @php

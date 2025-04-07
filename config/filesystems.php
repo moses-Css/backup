@@ -59,9 +59,13 @@ return [
             'throw' => false,
             'report' => false,
         ],
+    'google' => [
+    'driver' => 'google-drive',
+    'folder_id' => env('GOOGLE_DRIVE_FOLDER_ID'),
+    'service_account' => json_decode(file_get_contents(storage_path('app/google-drive.json')), true),
+],
 
-    ],
-
+],
     /*
     |--------------------------------------------------------------------------
     | Symbolic Links
